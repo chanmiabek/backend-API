@@ -1,10 +1,9 @@
-const  mongoose = require("mongoose");
+const mongoose = require("mongoose");
 const express = require("express");
 const bodyParser = require("body-parser");
-const  dotenv = require("dotenv");
-const courseRouter = require("./Routes/courseRoute.js");
+const dotenv = require("dotenv");
 const cors = require("cors");
-const course = require('./Model/courseModule.js');
+const courseRouter = require('./Routes/courseRoute.js');
 const userRouter = require('./Routes/userRoutes.js');
 
 const app = express();
@@ -16,9 +15,11 @@ const MONGO_URL = process.env.MONGO_URL;
 //Middleware
 app.use(cors());
 app.use(bodyParser.json());
+
 //defining the routes with the APIs
-app.use("/api/course",router);
-app.user("/api/user", router);
+app.use("/api/course", courseRouter);
+app.use("/api/user", userRouter);
+
 //connecting to the mongo db
 mongoose.connect(MONGO_URL).then(()=>{
     console.log("Connected to db successfully");
@@ -29,5 +30,4 @@ mongoose.connect(MONGO_URL).then(()=>{
 )
 .catch((error)=>{
     console.log(error);
-        }
-)
+})
