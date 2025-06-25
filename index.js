@@ -22,8 +22,12 @@ app.use(bodyParser.json());
 //defining the routes with the APIs
 app.use("/api/course", courseRouter);
 app.use("/api/user", userRouter);
+app.use("/api/login", userRouter);
+app.use("api/register", userRouter);
+
 
 // Example of protected routes using auth middleware
+
 app.use("/api/logout", auth, (req, res) => {
     // This is a protected route that requires authentication
     res.status(200).json({ status: "00", message: "Logout successful" });
