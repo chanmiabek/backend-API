@@ -4,10 +4,14 @@ const User = require('../Model/userModule');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const auth = require('./auth');
+const axios = require('axios');
+//const nodemailer = require('nodemailer');
+
 
 // Create a new user
 router.post("/register", async (req, res) =>{
-    const {fullName, email, password } = new User(req.body);
+    const { fullName, email, password } = req.body;
+   // const response = await axios("http://localhost:8080/api/register", { fullName, email, password, confirmPassword: password } = req.body);
     const userExists = await User.findOne({email});
 
     if(userExists){
@@ -18,13 +22,17 @@ router.post("/register", async (req, res) =>{
         const newUser = new User({fullName, email, password: hashedPassword});
         const response = await User.create(newUser);
         return res.status(201).json({status: "00",
-            message: "User created successfully. proceed to login",
+            message: "Account created successfully. proceed to login",
             data: response});
     }
 })
+
+
+
 // create login route
 router.post("/login", async (req, res) => {
-    const {email, password} = req.body;
+    //console.log("Login request received", req.body);
+    const { email, password } = req.body;
     console.log('email from the request', +'', email);
     const userExists = await User.findOne({email});
     if(!email || !password){
@@ -39,13 +47,9 @@ router.post("/login", async (req, res) => {
         // Check if the password matches
         const isPasswordValid = await bcrypt.compare(password, userDetails.password);
         if(!isPasswordValid){
+            console.log("Invalid password");
             return res.status(401).json({status: "01", message: "Invalid password"});
         }
-
-        if(userDetails.password !== password){
-            return res.status(401).json({status: "01", message: "Invalid password"});
-        }
-    
 
         //generate a token
         const token = jwt.sign({ id: userExists.id }, process.env.JWT_SECRET, { expiresIn: '1h' });

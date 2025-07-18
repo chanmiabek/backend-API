@@ -1,8 +1,10 @@
 const mongoose = require("mongoose");
 
 const courseSchema = new mongoose.Schema({
-    title: { type: String, required: true },
-    description: { type: String },
+    title: String,
+    description: String,
+    instructor: { type: mongoose.Schema.Types.ObjectId, ref: 'User'},
+    modules: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Module'}],
     createdAt: { type: Date, default: Date.now }
 });
 
