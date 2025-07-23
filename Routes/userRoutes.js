@@ -11,7 +11,6 @@ const axios = require('axios');
 // Create a new user
 router.post("/register", async (req, res) =>{
     const { fullName, email, password } = req.body;
-   // const response = await axios("http://localhost:8080/api/register", { fullName, email, password, confirmPassword: password } = req.body);
     const userExists = await User.findOne({email});
 
     if(userExists){
